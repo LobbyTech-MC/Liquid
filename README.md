@@ -1,4 +1,4 @@
-# Liquid 原简介
+# Liquids 原简介
 
 This is a Slimefun addon that adds liquid versions af metals and alloys and ways to process and store them.
 
