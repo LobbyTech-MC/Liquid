@@ -17,7 +17,6 @@ import me.mrCookieSlime.Slimefun.api.SlimefunItemStack;
 import me.mrCookieSlime.Slimefun.cscorelib2.config.Config;
 import me.mrCookieSlime.Slimefun.cscorelib2.inventory.ItemUtils;
 import me.mrCookieSlime.Slimefun.cscorelib2.updater.GitHubBuildsUpdater;
-import org.bstats.bukkit.Metrics;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -38,16 +37,13 @@ public class Liquid extends JavaPlugin implements SlimefunAddon {
         if (cfg.getBoolean("options.auto-update") && getDescription().getVersion().startsWith("DEV - ")) {
             new GitHubBuildsUpdater(this, getFile(), "Seggan/Liquid/master").start();
         }
-        
-        new Metrics(this, 9408);
-
         List<LiquidMetal> metals = new ArrayList<>();
 
         for (ItemStack metal : LiquidMetal.getMetals()) {
             SlimefunItemStack stack = new SlimefunItemStack(
                 "MOLTEN_" + Util.getID(metal).replace("_INGOT", ""),
                 Material.LAVA_BUCKET,
-                "&6Molten " + ChatUtils.removeColorCodes(ItemUtils.getItemName(metal))
+                "&6熔融 " + ChatUtils.removeColorCodes(ItemUtils.getItemName(metal))
                     .replace(" Ingot", "")
             );
             LiquidMetal.addLiquid(metal, stack);
@@ -58,7 +54,7 @@ public class Liquid extends JavaPlugin implements SlimefunAddon {
             SlimefunItemStack stack = new SlimefunItemStack(
                 "MOLTEN_" + Util.getID(crystal),
                 Material.LAVA_BUCKET,
-                "&6Molten " + ChatUtils.removeColorCodes(ItemUtils.getItemName(crystal))
+                "&6熔融 " + ChatUtils.removeColorCodes(ItemUtils.getItemName(crystal))
             );
             LiquidMetal.addCrystal(crystal, stack);
             metals.add(new LiquidMetal(stack, crystal));
@@ -68,7 +64,7 @@ public class Liquid extends JavaPlugin implements SlimefunAddon {
             SlimefunItemStack stack = new SlimefunItemStack(
                 "MOLTEN_" + Util.getID(ore),
                 Material.LAVA_BUCKET,
-                "&6Molten " + ChatUtils.removeColorCodes(ItemUtils.getItemName(ore))
+                "&6熔融 " + ChatUtils.removeColorCodes(ItemUtils.getItemName(ore))
             );
             LiquidMetal.addOre(ore, stack);
             metals.add(new LiquidMetal(stack, ore));
@@ -117,10 +113,10 @@ public class Liquid extends JavaPlugin implements SlimefunAddon {
         }).register(this);
 
         metals.sort((o1, o2) -> ChatUtils.removeColorCodes(ItemUtils.getItemName(o1.getItem()))
-            .replace(" Ingot", "")
+            .replace(" 锭", "")
             .replaceAll("\\(\\d+-Carat\\)", "")
             .compareToIgnoreCase(ChatUtils.removeColorCodes(ItemUtils.getItemName(o2.getItem()))
-                .replace(" Ingot", "")
+                .replace(" 锭", "")
                 .replaceAll("\\(\\d+-Carat\\)", "")));
 
         for (LiquidMetal metal : metals) {
