@@ -101,6 +101,6 @@ public final class Items {
         Material.CHARCOAL,
         "&7战斗",
         "",
-        "&7一个人的垃圾是另一个人的宝藏...",
+        "&7一个人的垃圾是另一个人的宝藏..."
     );
 }

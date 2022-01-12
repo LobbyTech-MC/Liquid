@@ -117,7 +117,7 @@ public class Liquid extends JavaPlugin implements SlimefunAddon {
             .replace(" 锭", "")
             .replaceAll("\\(\\d+-克拉\\)", "")
             .compareToIgnoreCase(ChatUtils.removeColorCodes(ItemUtils.getItemName(o2.getItem()))
-                .replace(" Ingot", "")
+                .replace(" 锭", "")
                 .replaceAll("\\(\\d+-克拉\\)", "")));
 
         for (LiquidMetal metal : metals) {
