@@ -4,19 +4,19 @@ import io.github.seggan.liquid.categories.MixerCategory;
 import io.github.seggan.liquid.machinery.Centrifuge;
 import io.github.seggan.liquid.machinery.Crystallizer;
 import io.github.seggan.liquid.machinery.Melter;
-import io.github.seggan.liquid.machinery.Solidifier;
 import io.github.seggan.liquid.machinery.Mixer;
+import io.github.seggan.liquid.machinery.Solidifier;
 import io.github.seggan.liquid.machinery.SpraySolidifier;
 import io.github.seggan.liquid.objects.LiquidMetal;
 import io.github.thebusybiscuit.slimefun4.api.SlimefunAddon;
+import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
+import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
+import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.slimefun4.implementation.SlimefunItems;
+import io.github.thebusybiscuit.slimefun4.libraries.dough.items.ItemUtils;
+import io.github.thebusybiscuit.slimefun4.libraries.dough.updater.GitHubBuildsUpdater;
 import io.github.thebusybiscuit.slimefun4.utils.ChatUtils;
-import me.mrCookieSlime.Slimefun.Lists.RecipeType;
-import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SlimefunItem;
-import me.mrCookieSlime.Slimefun.api.SlimefunItemStack;
-import me.mrCookieSlime.Slimefun.cscorelib2.config.Config;
-import me.mrCookieSlime.Slimefun.cscorelib2.inventory.ItemUtils;
-import me.mrCookieSlime.Slimefun.cscorelib2.updater.GitHubBuildsUpdater;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -32,11 +32,12 @@ public class Liquid extends JavaPlugin implements SlimefunAddon {
     public void onEnable() {
         instance = this;
 
-        Config cfg = new Config(this);
-
-        if (cfg.getBoolean("options.auto-update") && getDescription().getVersion().startsWith("DEV - ")) {
+        if (getConfig().getBoolean("options.auto-update", true) && getDescription().getVersion().startsWith("DEV - ")) {
             new GitHubBuildsUpdater(this, getFile(), "Seggan/Liquid/master").start();
         }
+        
+        new Metrics(this, 9408);
+
         List<LiquidMetal> metals = new ArrayList<>();
 
         for (ItemStack metal : LiquidMetal.getMetals()) {
@@ -44,7 +45,7 @@ public class Liquid extends JavaPlugin implements SlimefunAddon {
                 "MOLTEN_" + Util.getID(metal).replace("_INGOT", ""),
                 Material.LAVA_BUCKET,
                 "&6熔融 " + ChatUtils.removeColorCodes(ItemUtils.getItemName(metal))
-                    .replace(" Ingot", "")
+                    .replace(" 锭", "")
             );
             LiquidMetal.addLiquid(metal, stack);
             metals.add(new LiquidMetal(stack, metal));
@@ -70,43 +71,43 @@ public class Liquid extends JavaPlugin implements SlimefunAddon {
             metals.add(new LiquidMetal(stack, ore));
         }
 
-        new Melter(Items.category, Items.MELTER, RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
+        new Melter(Items.CATEGORY, Items.MELTER, RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
             SlimefunItems.HEATING_COIL, SlimefunItems.HEATING_COIL, SlimefunItems.HEATING_COIL,
             SlimefunItems.HEATING_COIL, SlimefunItems.ELECTRIFIED_CRUCIBLE_3, SlimefunItems.HEATING_COIL,
             SlimefunItems.HEATING_COIL, SlimefunItems.HEATING_COIL, SlimefunItems.HEATING_COIL
         }).register(this);
 
-        new Solidifier(Items.category, Items.SOLIDIFIER, RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
+        new Solidifier(Items.CATEGORY, Items.SOLIDIFIER, RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
             SlimefunItems.COOLING_UNIT, SlimefunItems.COOLING_UNIT, SlimefunItems.COOLING_UNIT,
             SlimefunItems.COOLING_UNIT, SlimefunItems.FREEZER_2, SlimefunItems.COOLING_UNIT,
             SlimefunItems.COOLING_UNIT, SlimefunItems.COOLING_UNIT, SlimefunItems.COOLING_UNIT
         }).register(this);
 
-        new SpraySolidifier(Items.category, Items.SPRAY_SOLIDIFIER, RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
+        new SpraySolidifier(Items.CATEGORY, Items.SPRAY_SOLIDIFIER, RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
             SlimefunItems.HEATING_COIL, Items.SOLIDIFIER, SlimefunItems.HEATING_COIL,
             new ItemStack(Material.IRON_NUGGET), SlimefunItems.COOLING_UNIT, new ItemStack(Material.IRON_NUGGET),
             SlimefunItems.REINFORCED_PLATE, SlimefunItems.REINFORCED_PLATE, SlimefunItems.REINFORCED_PLATE
         }).register(this);
 
-        new Mixer(Items.category, Items.MIXER, RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
+        new Mixer(Items.CATEGORY, Items.MIXER, RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
             SlimefunItems.CARBONADO, SlimefunItems.HEATING_COIL, SlimefunItems.CARBONADO,
             SlimefunItems.HEATING_COIL, Items.MELTER, SlimefunItems.HEATING_COIL,
             SlimefunItems.CARBONADO, SlimefunItems.HEATING_COIL, SlimefunItems.CARBONADO
         }).register(this);
 
-        new Centrifuge(Items.category, Items.CENTRIFUGE, RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
+        new Centrifuge(Items.CATEGORY, Items.CENTRIFUGE, RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
             SlimefunItems.REINFORCED_ALLOY_INGOT, new ItemStack(Material.BOWL), SlimefunItems.REINFORCED_ALLOY_INGOT,
             new ItemStack(Material.BOWL), SlimefunItems.ELECTRIC_DUST_WASHER_3, new ItemStack(Material.BOWL),
             SlimefunItems.REINFORCED_ALLOY_INGOT, new ItemStack(Material.BOWL), SlimefunItems.REINFORCED_ALLOY_INGOT
         }).register(this);
 
-        new Crystallizer(Items.category, Items.CRYSTALLIZER, RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
+        new Crystallizer(Items.CATEGORY, Items.CRYSTALLIZER, RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
             SlimefunItems.COOLING_UNIT, new ItemStack(Material.BOWL), SlimefunItems.COOLING_UNIT,
             new ItemStack(Material.BOWL), Items.SOLIDIFIER, new ItemStack(Material.BOWL),
             SlimefunItems.COOLING_UNIT, new ItemStack(Material.BOWL), SlimefunItems.COOLING_UNIT
         }).register(this);
 
-        new SlimefunItem(Items.category, Items.SLAG, Solidifier.RECIPE_TYPE, new ItemStack[]{
+        new SlimefunItem(Items.CATEGORY, Items.SLAG, Solidifier.RECIPE_TYPE, new ItemStack[]{
             LiquidMetal.getLiquids().get(Items.SLAG), null, null,
             null, null, null,
             null, null, null,
@@ -114,10 +115,10 @@ public class Liquid extends JavaPlugin implements SlimefunAddon {
 
         metals.sort((o1, o2) -> ChatUtils.removeColorCodes(ItemUtils.getItemName(o1.getItem()))
             .replace(" 锭", "")
-            .replaceAll("\\(\\d+-Carat\\)", "")
+            .replaceAll("\\(\\d+-克拉\\)", "")
             .compareToIgnoreCase(ChatUtils.removeColorCodes(ItemUtils.getItemName(o2.getItem()))
-                .replace(" 锭", "")
-                .replaceAll("\\(\\d+-Carat\\)", "")));
+                .replace(" Ingot", "")
+                .replaceAll("\\(\\d+-克拉\\)", "")));
 
         for (LiquidMetal metal : metals) {
             metal.register(this);
